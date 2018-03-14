@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class that implements a database of employees.
@@ -15,7 +16,7 @@ public class EmployeeDatabase {
     /**
      * List of employees.
      */
-    public List<Employee> employees;
+    private List<Employee> employees;
 
     /**
      * Constructor which initializes the employees list.
@@ -23,21 +24,21 @@ public class EmployeeDatabase {
      * We suggest that you investigate the ArrayList class, which is one of the more useful built-in
      * data structures in Java.
      */
-    public EmployeeDatabase() {
+    private EmployeeDatabase() {
         employees = new ArrayList<Employee>();
     }
 
     /**
      * Returns the manager for the given employee.
      *
-     * @param employee
-     * @return
+     * @param employee employee.
+     * @return manager.
      */
     Employee findManager(final Employee employee) {
         Employee manager = null;
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getName() == employee.getManager()) {
-                manager = employees.get(i);
+        for (Employee employee1 : employees) {
+            if (Objects.equals(employee1.getName(), employee.getManager())) {
+                manager = employee1;
                 break;
             }
         }
@@ -52,10 +53,15 @@ public class EmployeeDatabase {
      * @param employee name of the employee
      * @return int
      */
-    public int countManagersAbove(final Employee employee) {
-        /*
-         * Implement this function
-         */
+    private int countManagersAbove(final Employee employee) {
+        int cnt = 0;
+        for (Employee x : employees) {
+            if (Objects.equals(x.getName(), employee.getManager())) {
+                cnt += 1 + countManagersAbove(x);
+            }
+        }
+        return cnt;
+
     }
 
     /**
@@ -66,10 +72,14 @@ public class EmployeeDatabase {
      * @param employee name of the employee
      * @return int
      */
-    public int countEmployeesUnder(final Employee employee) {
-        /*
-         * Implement this function
-         */
+    private int countEmployeesUnder(final Employee employee) {
+        int cnt = 0;
+        for (Employee x : employees) {
+            if (Objects.equals(x.getManager(), employee.getName())) {
+                cnt += 1 + countEmployeesUnder(x);
+            }
+        }
+        return cnt;
     }
 
     /**
